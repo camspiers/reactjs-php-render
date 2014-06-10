@@ -31,15 +31,15 @@ class HTTPServerRenderer implements RenderInterface
 
     /**
      * @param string $host
-     * @param string $path
      * @param int $port
+     * @param string $path
      * @param bool $ssl
      */
-    public function __construct($host, $path, $port, $ssl = false)
+    public function __construct($host, $port, $path, $ssl = false)
     {
         $this->host = (string) $host;
-        $this->path = (string) $path;
         $this->port = (int) $port;
+        $this->path = (string) $path;
         $this->ssl = (bool) $ssl;
     }
 
@@ -72,14 +72,14 @@ class HTTPServerRenderer implements RenderInterface
     private function render($reactFunction, $componentPath, $props = null)
     {
         $client = new Client();
-
+    
         $response = $client->post(
             sprintf(
-                "http%s://%s:%s/%s/",
+                "http%s://%s:%s/%s",
                 $this->ssl ? 's' : '',
                 $this->host,
                 $this->port,
-                trim($this->path, '/')
+                ltrim($this->path, '/')
             ),
             [
                 "body" => [
