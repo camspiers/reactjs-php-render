@@ -35,7 +35,7 @@ class HTTPServerRenderer implements RenderInterface
      * @param string $path
      * @param bool $ssl
      */
-    public function __construct($host, $port, $path, $ssl = false)
+    public function __construct($host, $port, $path = '', $ssl = false)
     {
         $this->host = (string) $host;
         $this->port = (int) $port;
