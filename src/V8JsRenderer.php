@@ -102,7 +102,7 @@ class V8JsRenderer implements RenderInterface
     {
         $react = [];
 
-        $react[] = "var console = { warn: function() {}, error: print };";
+        $react[] = "var console = { warn: print, error: print };";
         $react[] = "var global = {};";
 
         foreach ($this->sourceFiles as $sourceFile) {
@@ -126,17 +126,35 @@ class V8JsRenderer implements RenderInterface
         try {
             ob_start();
             $markup = $this->v8->executeString(implode("\n", $react));
-            ob_end_clean();
+            $errors = ob_end_clean();
+
+            if ($errors) {
+                $this->log(
+                    "Errors in v8 javascript execution",
+                    [
+                        "errors" => $errors
+                    ]
+                );
+            }
 
             if (!is_string($markup)) {
                 throw new RuntimeException("Value returned from v8 executeString isn't a string");
             }
         } catch (V8JsException $e) {
-            if ($this->logger instanceof LoggerInterface) {
-                $this->logger->error($e->getMessage());
-            }
+            $this->log($e->getMessage());
         }
 
         return $markup;
+    }
+
+    /**
+     * @param $message
+     * @param array $context
+     */
+    protected function log($message, array $context = array())
+    {
+        if ($this->logger instanceof LoggerInterface) {
+            $this->logger->error($message, $context);
+        }
     }
 }
