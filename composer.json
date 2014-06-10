@@ -1,0 +1,27 @@
+{
+	"name": "camspiers/reactjs-php-render",
+	"description": "React rendering from PHP",
+	"authors": [
+		{
+			"name": "Cam Spiers",
+			"email": "camspiers@gmail.com"
+		},
+		{
+			"name": "Pieter Vanderwerff",
+			"email": "me@pieter.io"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"ReactJS\\": "src/"
+		}
+	},
+	"require-dev": {
+		"phpunit/phpunit": "~4.0"
+	},
+	"require": {
+		"php": ">=5.4.0",
+		"psr/log": "~1.0",
+		"guzzlehttp/guzzle": "~4.0"
+	}
+}
