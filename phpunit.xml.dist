@@ -13,7 +13,7 @@
 >
     <testsuites>
         <testsuite name="ReactJS">
-            <directory>./tests</directory>
+            <directory>./tests/cases</directory>
         </testsuite>
     </testsuites>
 </phpunit>

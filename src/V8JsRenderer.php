@@ -110,13 +110,14 @@ class V8JsRenderer implements RenderInterface
         }
 
         $react[] = "var React = require('react');";
+
         $react[] = sprintf(
             "var Component = require(%s);",
             json_encode($componentPath)
         );
 
         $react[] = sprintf(
-            "var markup = React.%s(Component(%s));",
+            "React.%s(Component(%s));",
             $reactFunction,
             json_encode($props)
         );
