@@ -1,6 +1,6 @@
 <?php
 
-namespace ReactJS;
+namespace ReactJS\Renderer;
 
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -8,11 +8,12 @@ use Traversable;
 use V8Js;
 use V8JsException;
 use RuntimeException;
+use ReactJS\RuntimeFragmentProvider\ProviderInterface;
 
 /**
  * @package ReactJS
  */
-class V8JsRenderer implements RenderInterface
+class V8JsRenderer implements RendererInterface
 {
     /**
      * @var \V8Js
@@ -20,9 +21,9 @@ class V8JsRenderer implements RenderInterface
     protected $v8;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var \ReactJS\RuntimeFragmentProvider\ProviderInterface
      */
-    protected $logger;
+    protected $fragmentProvider;
 
     /**
      * @var array|\Traversable
@@ -30,20 +31,27 @@ class V8JsRenderer implements RenderInterface
     protected $sourceFiles;
 
     /**
-     * @param \V8Js $v8
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param array|\Traversable $sourceFiles
+     * @param \ReactJS\RuntimeFragmentProvider\ProviderInterface
+     * @param \V8Js $v8
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        V8Js $v8,
         $sourceFiles,
+        ProviderInterface $fragmentProvider,
+        V8Js $v8 = null,
         LoggerInterface $logger = null
     )
     {
-        $this->v8 = $v8;
+        $this->fragmentProvider = $fragmentProvider;
         $this->setSourceFiles($sourceFiles);
+        $this->v8 = $v8 ?: new V8Js;
         $this->logger = $logger;
-        $this->$generate = new SyncRequireGenerator();
     }
 
     /**
@@ -77,25 +85,9 @@ class V8JsRenderer implements RenderInterface
      * @param array|void $props
      * @return string
      */
-    public function renderMountedComponent($componentPath, $props = null)
-    {
-        return $this->$generate->mountedComponentMarkup(
-            $componentPath,
-            $props,
-            $this->renderMountableComponent($componentPath, $props)
-        );
-    }
-
-    /**
-     * @param $componentPath
-     * @param array|void $props
-     * @return string
-     */
     public function renderMountableComponent($componentPath, $props = null)
     {
-        return $this->renderWith(
-            $this->$generate->mountableComponentJS($componentPath, $props)
-        );
+        return $this->render("renderComponentToString", $componentPath, $props);
     }
 
     /**
@@ -105,17 +97,17 @@ class V8JsRenderer implements RenderInterface
      */
     public function renderStaticComponent($componentPath, $props = null)
     {
-        return $this->renderWith(
-            $this->$generate->staticComponentJS($componentPath, $props)
-        );
+        return $this->render("renderComponentToStaticMarkup", $componentPath, $props);
     }
 
     /**
-     * @param $reactRuntime
+     * @param $reactFunction
+     * @param $componentPath
+     * @param null $props
      * @return string
      * @throws \RuntimeException
      */
-    private function renderWith($reactRuntime)
+    private function render($reactFunction, $componentPath, $props = null)
     {
         $react = [];
 
@@ -126,7 +118,13 @@ class V8JsRenderer implements RenderInterface
             $react[] = file_get_contents($sourceFile) . ";";
         }
 
-        $react[] = $reactRuntime;
+        $react[] = sprintf(
+            "%s.%s(%s(%s));",
+            $this->fragmentProvider->getReact(),
+            $reactFunction,
+            $this->fragmentProvider->getComponent($componentPath),
+            json_encode($props)
+        );
 
         $markup = '';
 

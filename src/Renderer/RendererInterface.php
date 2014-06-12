@@ -1,19 +1,12 @@
 <?php
 
-namespace ReactJS;
+namespace ReactJS\Renderer;
 
 /**
  * @package ReactJS
  */
-interface RenderInterface
+interface RendererInterface
 {
-    /**
-     * @param $componentPath
-     * @param array|void $props
-     * @return string
-     */
-    public function renderMountedComponent($componentPath, $props = null);
-
     /**
      * @param $componentPath
      * @param array|void $props

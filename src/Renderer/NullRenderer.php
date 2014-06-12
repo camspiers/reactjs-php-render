@@ -1,33 +1,14 @@
 <?php
 
-namespace ReactJS;
+namespace ReactJS\Renderer;
 
 use RuntimeException;
 
 /**
  * @package ReactJS
  */
-class NullRenderer implements RenderInterface
+class NullRenderer implements RendererInterface
 {
-    public function __construct()
-    {
-        $this->$generate = new SyncRequireGenerator();
-    }
-
-    /**
-     * @param $componentPath
-     * @param array|void $props
-     * @return string
-     */
-    public function renderMountedComponent($componentPath, $props = null)
-    {
-        return $this->$generate->mountedComponentMarkup(
-            $componentPath,
-            $props,
-            $this->renderMountableComponent($componentPath, $props)
-        );
-    }
-
     /**
      * @param $componentPath
      * @param array|void $props
@@ -48,6 +29,4 @@ class NullRenderer implements RenderInterface
     {
         throw new RuntimeException("renderStaticComponent not supported for null renderer");
     }
-
-
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace ReactJS;
+namespace ReactJS\Renderer;
 
 use GuzzleHttp\Client;
 
 /**
  * @package ReactJS
  */
-class HTTPServerRenderer implements RenderInterface
+class HTTPServerRenderer implements RendererInterface
 {
     /**
      * @var bool
@@ -41,21 +41,6 @@ class HTTPServerRenderer implements RenderInterface
         $this->port = (int) $port;
         $this->path = (string) $path;
         $this->ssl = (bool) $ssl;
-        $this->$generate = new SyncRequireGenerator();
-    }
-
-    /**
-     * @param $componentPath
-     * @param array|void $props
-     * @return string
-     */
-    public function renderMountedComponent($componentPath, $props = null)
-    {
-        return $this->$generate->mountedComponentMarkup(
-            $componentPath,
-            $props,
-            $this->renderMountableComponent($componentPath, $props)
-        );
     }
 
     /**
