@@ -5,26 +5,27 @@ namespace ReactJS;
 /**
  * @package ReactJS
  */
-interface RenderInterface
+interface GenerateRenderRuntimeInterface
 {
     /**
      * @param $componentPath
      * @param array|void $props
+     * @param string $renderedMountableComponentMarkup
      * @return string
      */
-    public function renderMountedComponent($componentPath, $props = null);
+    public function mountedComponentMarkup($componentPath, $props = null, $renderedMountableComponentMarkup = '');
 
     /**
      * @param $componentPath
      * @param array|void $props
      * @return string
      */
-    public function renderMountableComponent($componentPath, $props = null);
-    
+    public function mountableComponentJS($componentPath, $props = null);
+
     /**
      * @param $componentPath
      * @param array|void $props
      * @return string
      */
-    public function renderStaticComponent($componentPath, $props = null);
+    public function staticComponentJS($componentPath, $props = null);
 }

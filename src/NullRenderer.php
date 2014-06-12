@@ -9,24 +9,45 @@ use RuntimeException;
  */
 class NullRenderer implements RenderInterface
 {
+    public function __construct()
+    {
+        $this->$generate = new SyncRequireGenerator();
+    }
+
     /**
      * @param $componentPath
      * @param array|void $props
      * @return string
      */
-    public function renderComponentToString($componentPath, $props = null)
+    public function renderMountedComponent($componentPath, $props = null)
+    {
+        return $this->$generate->mountedComponentMarkup(
+            $componentPath,
+            $props,
+            $this->renderMountableComponent($componentPath, $props)
+        );
+    }
+
+    /**
+     * @param $componentPath
+     * @param array|void $props
+     * @return string
+     */
+    public function renderMountableComponent($componentPath, $props = null)
     {
         return '';
     }
 
     /**
      * @param $componentPath
-     * @param null $props
-     * @return string|void
+     * @param array|void $props
+     * @return string
      * @throws \RuntimeException
      */
-    public function renderComponentToStaticMarkup($componentPath, $props = null)
+    public function renderStaticComponent($componentPath, $props = null)
     {
-        throw new RuntimeException("renderComponentToStaticMarkup not supported for null renderer");
+        throw new RuntimeException("renderStaticComponent not supported for null renderer");
     }
+
+
 }
