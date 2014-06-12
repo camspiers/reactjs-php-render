@@ -43,6 +43,7 @@ class V8JsRenderer implements RenderInterface
         $this->v8 = $v8;
         $this->setSourceFiles($sourceFiles);
         $this->logger = $logger;
+        $this->$generate = new SyncRequireGenerator();
     }
 
     /**
@@ -73,12 +74,16 @@ class V8JsRenderer implements RenderInterface
 
     /**
      * @param $componentPath
-     * @param array|null $props
+     * @param array|void $props
      * @return string
      */
-    public function renderComponentToString($componentPath, $props = null)
+    public function renderMountedComponent($componentPath, $props = null)
     {
-        return $this->render(__FUNCTION__, $componentPath, $props);
+        return $this->$generate->mountedComponentMarkup(
+            $componentPath,
+            $props,
+            $this->renderMountableComponent($componentPath, $props)
+        );
     }
 
     /**
@@ -86,19 +91,31 @@ class V8JsRenderer implements RenderInterface
      * @param array|void $props
      * @return string
      */
-    public function renderComponentToStaticMarkup($componentPath, $props = null)
+    public function renderMountableComponent($componentPath, $props = null)
     {
-        return $this->render(__FUNCTION__, $componentPath, $props);
+        return $this->renderWith(
+            $this->$generate->mountableComponentJS($componentPath, $props)
+        );
     }
 
     /**
-     * @param $reactFunction
      * @param $componentPath
-     * @param null $props
+     * @param array|void $props
+     * @return string
+     */
+    public function renderStaticComponent($componentPath, $props = null)
+    {
+        return $this->renderWith(
+            $this->$generate->staticComponentJS($componentPath, $props)
+        );
+    }
+
+    /**
+     * @param $reactRuntime
      * @return string
      * @throws \RuntimeException
      */
-    private function render($reactFunction, $componentPath, $props = null)
+    private function renderWith($reactRuntime)
     {
         $react = [];
 
@@ -109,18 +126,7 @@ class V8JsRenderer implements RenderInterface
             $react[] = file_get_contents($sourceFile) . ";";
         }
 
-        $react[] = "var React = require('react');";
-
-        $react[] = sprintf(
-            "var Component = require(%s);",
-            json_encode($componentPath)
-        );
-
-        $react[] = sprintf(
-            "React.%s(Component(%s));",
-            $reactFunction,
-            json_encode($props)
-        );
+        $react[] = $reactRuntime;
 
         $markup = '';
 

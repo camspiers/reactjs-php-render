@@ -41,6 +41,7 @@ class HTTPServerRenderer implements RenderInterface
         $this->port = (int) $port;
         $this->path = (string) $path;
         $this->ssl = (bool) $ssl;
+        $this->$generate = new SyncRequireGenerator();
     }
 
     /**
@@ -48,9 +49,13 @@ class HTTPServerRenderer implements RenderInterface
      * @param array|void $props
      * @return string
      */
-    public function renderComponentToString($componentPath, $props = null)
+    public function renderMountedComponent($componentPath, $props = null)
     {
-        return $this->render(__FUNCTION__, $componentPath, $props);
+        return $this->$generate->mountedComponentMarkup(
+            $componentPath,
+            $props,
+            $this->renderMountableComponent($componentPath, $props)
+        );
     }
 
     /**
@@ -58,18 +63,28 @@ class HTTPServerRenderer implements RenderInterface
      * @param array|void $props
      * @return string
      */
-    public function renderComponentToStaticMarkup($componentPath, $props = null)
+    public function renderMountableComponent($componentPath, $props = null)
     {
-        return $this->render(__FUNCTION__, $componentPath, $props);
+        return $this->render('mountable', $componentPath, $props);
     }
 
     /**
-     * @param $reactFunction
+     * @param $componentPath
+     * @param array|void $props
+     * @return string
+     */
+    public function renderStaticComponent($componentPath, $props = null)
+    {
+        return $this->render('static', $componentPath, $props);
+    }
+
+    /**
+     * @param $reactRenderType
      * @param $componentPath
      * @param null $props
      * @return string
      */
-    private function render($reactFunction, $componentPath, $props = null)
+    private function render($reactRenderType, $componentPath, $props = null)
     {
         $client = new Client();
     
@@ -83,7 +98,7 @@ class HTTPServerRenderer implements RenderInterface
             ),
             [
                 "body" => [
-                    "reactFunction" => $reactFunction,
+                    "renderType" => $reactRenderType,
                     "componentPath" => $componentPath,
                     "props" => json_encode($props)
                 ]
