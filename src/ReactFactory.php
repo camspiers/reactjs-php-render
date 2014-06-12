@@ -2,6 +2,7 @@
 
 namespace ReactJS;
 
+use ReactJS\Renderer\NullRenderer;
 use ReactJS\RuntimeFragmentProvider\ProviderInterface;
 use ReactJS\Renderer\V8JsRenderer;
 use ReactJS\Renderer\HTTPServerRenderer;
@@ -16,10 +17,10 @@ class ReactFactory
 {
     /**
      * @param $sourceFiles
-     * @param ProviderInterface $fragmentProvider
-     * @param V8Js $v8
-     * @param LoggerInterface $logger
-     * @return React
+     * @param \ReactJS\RuntimeFragmentProvider\ProviderInterface $fragmentProvider
+     * @param \V8Js $v8
+     * @param \Psr\Log\LoggerInterface $logger
+     * @return \ReactJS\React
      */
     public static function createUsingV8(
         $sourceFiles,
@@ -46,7 +47,8 @@ class ReactFactory
      * @param $port
      * @param string $path
      * @param bool $ssl
-     * @param ProviderInterface $fragmentProvider
+     * @param \ReactJS\RuntimeFragmentProvider\ProviderInterface $fragmentProvider
+     * @param \Psr\Log\LoggerInterface $logger
      * @return React
      */
     public static function createUsingHTTPServer(
@@ -62,6 +64,20 @@ class ReactFactory
 
         return new React(
             new HTTPServerRenderer($host, $port, $path, $ssl, $logger),
+            $fragmentProvider
+        );
+    }
+
+    /**
+     * @param ProviderInterface $fragmentProvider
+     * @return \ReactJS\React
+     */
+    public static function createUsingNull(ProviderInterface $fragmentProvider = null)
+    {
+        $fragmentProvider ?: new SynchronousRequireProvider();
+
+        return new React(
+            new NullRenderer(),
             $fragmentProvider
         );
     }
