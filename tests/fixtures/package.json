@@ -1,5 +1,7 @@
 {
+	"name": "reactjs-php-render-tests",
 	"description": "React for unit tests",
+	"version": "0.0.0",
 	"dependencies": {
 		"react": "~0.10",
 		"browserify": "~3.26.0"

@@ -21,14 +21,14 @@ class ReactFactory
      * @param LoggerInterface $logger
      * @return React
      */
-    public static function createV8Renderer(
+    public static function createUsingV8(
         $sourceFiles,
         ProviderInterface $fragmentProvider = null,
         V8Js $v8 = null,
         LoggerInterface $logger = null
     )
     {
-        $fragmentProvider ?: new SynchronousRequireProvider();
+        $fragmentProvider = $fragmentProvider ?: new SynchronousRequireProvider();
 
         return new React(
             new V8JsRenderer(
@@ -49,18 +49,19 @@ class ReactFactory
      * @param ProviderInterface $fragmentProvider
      * @return React
      */
-    public static function createHTTPServerRenderer(
+    public static function createUsingHTTPServer(
         $host,
         $port,
         $path = '',
         $ssl = false,
-        ProviderInterface $fragmentProvider = null
+        ProviderInterface $fragmentProvider = null,
+        LoggerInterface $logger = null
     )
     {
         $fragmentProvider ?: new SynchronousRequireProvider();
 
         return new React(
-            new HTTPServerRenderer($host, $port, $path, $ssl),
+            new HTTPServerRenderer($host, $port, $path, $ssl, $logger),
             $fragmentProvider
         );
     }

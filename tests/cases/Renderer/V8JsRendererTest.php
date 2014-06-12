@@ -1,26 +1,24 @@
 <?php
 
-namespace ReactJS;
+namespace ReactJS\Renderer;
+
+use ReactJS\RuntimeFragmentProvider\SynchronousRequireProvider;
 
 class V8JsRendererTest extends \PHPUnit_Framework_TestCase
 {
-    protected $v8;
+    protected $renderer;
     
     public function setUp()
     {
-        $this->v8 = new \V8Js;
+        $this->renderer = new V8JsRenderer(
+            [__DIR__ . '/../../fixtures/bundle.js'],
+            new SynchronousRequireProvider
+        );
     }
 
-    public function testRenderComponentToString()
+    public function testRenderMountableComponent()
     {
-        $r = new V8JsRenderer(
-            $this->v8,
-            [
-                __DIR__ . '/../fixtures/bundle.js'
-            ]
-        );
-        
-        $markup = $r->renderComponentToString('./TestComponent');
+        $markup = $this->renderer->renderMountableComponent('./TestComponent');
         
         $this->assertContains(
             'Some testing content',
@@ -38,16 +36,9 @@ class V8JsRendererTest extends \PHPUnit_Framework_TestCase
         );
     }
     
-    public function testRenderComponentToStaticMarkup()
-    {
-        $r = new V8JsRenderer(
-            $this->v8,
-            [
-                __DIR__ . '/../fixtures/bundle.js'
-            ]
-        );
-        
-        $markup = $r->renderComponentToStaticMarkup('./TestComponent');
+    public function testRenderStaticComponent()
+    {   
+        $markup = $this->renderer->renderStaticComponent('./TestComponent');
 
         $this->assertContains(
             'Some testing content',

@@ -131,14 +131,12 @@ class V8JsRenderer implements RendererInterface
         try {
             ob_start();
             $markup = $this->v8->executeString(implode("\n", $react));
-            $errors = ob_end_clean();
+            $errors = ob_get_clean();
 
             if ($errors) {
                 $this->log(
                     "Errors in v8 javascript execution",
-                    [
-                        "errors" => $errors
-                    ]
+                    ["errors" => $errors]
                 );
             }
 
@@ -147,6 +145,10 @@ class V8JsRenderer implements RendererInterface
             }
         } catch (V8JsException $e) {
             $this->log($e->getMessage());
+
+            if ($reactFunction === 'renderComponentToStaticMarkup') {
+                throw $e;
+            }
         }
 
         return $markup;
