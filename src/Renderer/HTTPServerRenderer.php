@@ -47,7 +47,7 @@ class HTTPServerRenderer implements RendererInterface
         $host,
         $port,
         $path = '',
-        $ssl = false
+        $ssl = false,
         LoggerInterface $logger = null
     )
     {
