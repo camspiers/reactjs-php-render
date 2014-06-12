@@ -3,6 +3,7 @@
 namespace ReactJS\Renderer;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Psr\Log\LoggerInterface;
 
 /**
