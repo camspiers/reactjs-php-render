@@ -81,6 +81,7 @@ class V8JsRenderer implements RendererInterface
     }
 
     /**
+     * Renders a component that is able to be mounted via JavaScript in the browser
      * @param $componentPath
      * @param array|void $props
      * @return string
@@ -91,6 +92,7 @@ class V8JsRenderer implements RendererInterface
     }
 
     /**
+     * Renders a static component unable to be mounted via JavaScript
      * @param $componentPath
      * @param array|void $props
      * @return string

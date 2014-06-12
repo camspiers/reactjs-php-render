@@ -37,10 +37,11 @@ class HTTPServerRenderer implements RendererInterface
     protected $logger;
 
     /**
-     * @param string $host
-     * @param int $port
+     * @param $host
+     * @param $port
      * @param string $path
      * @param bool $ssl
+     * @param LoggerInterface $logger
      */
     public function __construct(
         $host,
@@ -58,6 +59,7 @@ class HTTPServerRenderer implements RendererInterface
     }
 
     /**
+     * Renders a component that is able to be mounted via JavaScript in the browser
      * @param $componentPath
      * @param array|void $props
      * @return string
@@ -68,6 +70,7 @@ class HTTPServerRenderer implements RendererInterface
     }
 
     /**
+     * Renders a static component unable to be mounted via JavaScript
      * @param $componentPath
      * @param array|void $props
      * @return string
