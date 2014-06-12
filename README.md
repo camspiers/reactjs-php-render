@@ -2,12 +2,16 @@
 
 This library aims to provide multiple options for rendering React from PHP.
 
+## Experimental
+
+The API is experimental and is likely to change.
+
 ## Concepts
 
 * Renderer (`ReactJS\Renderer\RendererInterface`)
  * This interface is implemented by mutiple renderers to provide different potential rendering options (HTTP Server, V8Js etc)
 * RuntimeFragmentProvider (`ReactJS\RuntimeFragmentProvider\ProviderInterface`)
- * This interface is implemented to prvider different environment support (CommonJS, Globals etc)
+ * This interface is implemented to provider different environment support (CommonJS, Globals etc)
 
 ## Usage
 
