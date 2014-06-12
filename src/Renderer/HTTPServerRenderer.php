@@ -1,13 +1,13 @@
 <?php
 
-namespace ReactJS;
+namespace ReactJS\Renderer;
 
 use GuzzleHttp\Client;
 
 /**
  * @package ReactJS
  */
-class HTTPServerRenderer implements RenderInterface
+class HTTPServerRenderer implements RendererInterface
 {
     /**
      * @var bool
@@ -48,9 +48,9 @@ class HTTPServerRenderer implements RenderInterface
      * @param array|void $props
      * @return string
      */
-    public function renderComponentToString($componentPath, $props = null)
+    public function renderMountableComponent($componentPath, $props = null)
     {
-        return $this->render(__FUNCTION__, $componentPath, $props);
+        return $this->render('mountable', $componentPath, $props);
     }
 
     /**
@@ -58,18 +58,18 @@ class HTTPServerRenderer implements RenderInterface
      * @param array|void $props
      * @return string
      */
-    public function renderComponentToStaticMarkup($componentPath, $props = null)
+    public function renderStaticComponent($componentPath, $props = null)
     {
-        return $this->render(__FUNCTION__, $componentPath, $props);
+        return $this->render('static', $componentPath, $props);
     }
 
     /**
-     * @param $reactFunction
+     * @param $reactRenderType
      * @param $componentPath
      * @param null $props
      * @return string
      */
-    private function render($reactFunction, $componentPath, $props = null)
+    private function render($reactRenderType, $componentPath, $props = null)
     {
         $client = new Client();
     
@@ -83,7 +83,7 @@ class HTTPServerRenderer implements RenderInterface
             ),
             [
                 "body" => [
-                    "reactFunction" => $reactFunction,
+                    "renderType" => $reactRenderType,
                     "componentPath" => $componentPath,
                     "props" => json_encode($props)
                 ]

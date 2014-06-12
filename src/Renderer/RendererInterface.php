@@ -1,23 +1,23 @@
 <?php
 
-namespace ReactJS;
+namespace ReactJS\Renderer;
 
 /**
  * @package ReactJS
  */
-interface RenderInterface
+interface RendererInterface
 {
     /**
      * @param $componentPath
      * @param array|void $props
      * @return string
      */
-    public function renderComponentToString($componentPath, $props = null);
+    public function renderMountableComponent($componentPath, $props = null);
     
     /**
      * @param $componentPath
      * @param array|void $props
      * @return string
      */
-    public function renderComponentToStaticMarkup($componentPath, $props = null);
+    public function renderStaticComponent($componentPath, $props = null);
 }
