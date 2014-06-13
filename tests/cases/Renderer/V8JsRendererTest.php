@@ -42,6 +42,27 @@ class V8JsRendererTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @expectedException \V8JsScriptException
+     * @expectedExceptionMessage Cannot find module './test'
+     */
+    public function testStaticDoesThrowExceptionOnMissingComponent()
+    {
+        $this->renderer->renderStaticComponent('./test');
+    }
+
+    public function testMountableDoesntThrowExceptionOnMissingComponent()
+    {
+        try {
+            $this->assertEquals(
+                '',
+                $this->renderer->renderMountableComponent('./test')
+            );
+        } catch (\Exception $e) {
+            $this->fail('Exception thrown when meant not to');
+        }
+    }
+
     public function testRenderStaticComponent()
     {
         $markup = $this->renderer->renderStaticComponent('./TestComponent');

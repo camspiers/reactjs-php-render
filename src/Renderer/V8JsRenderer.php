@@ -7,7 +7,9 @@ use Psr\Log\LoggerInterface;
 use ReactJS\RuntimeFragmentProvider\SynchronousRequireProvider;
 use Traversable;
 use V8Js;
-use V8JsException;
+use V8JsScriptException;
+use V8JsTimeLimitException;
+use V8JsMemoryLimitException;
 use RuntimeException;
 use ReactJS\RuntimeFragmentProvider\ProviderInterface;
 
@@ -108,51 +110,30 @@ class V8JsRenderer implements RendererInterface
      * @param $componentPath
      * @param null $props
      * @return string
-     * @throws \RuntimeException
-     * @throws \V8JsException
+     * @throws \Exception
      */
     private function render($reactFunction, $componentPath, $props = null)
     {
-        $react = [];
-
-        $react[] = "var console = { warn: print, error: print };";
-
-        // Clear any module loaders
-        if (method_exists($this->v8, 'setModuleLoader') && $this->fragmentProvider instanceof SynchronousRequireProvider) {
-            $react[] = "function require() {}";
-            $react[] = "var require = null;";
-        }
-
-        foreach ($this->sourceFiles as $sourceFile) {
-            $react[] = file_get_contents($sourceFile) . ";";
-        }
-
-        $react[] = sprintf(
-            "%s.%s(%s(%s));",
-            $this->fragmentProvider->getReact(),
-            $reactFunction,
-            $this->fragmentProvider->getComponent($componentPath),
-            json_encode($props)
-        );
+        $javascript = $this->getJavaScript($reactFunction, $componentPath, $props);
 
         $markup = '';
 
         try {
             ob_start();
-            $markup = $this->v8->executeString(implode("\n", $react));
-            $errors = ob_get_clean();
+            $markup = $this->v8->executeString($javascript);
+            $loggableErrors = ob_get_clean();
 
-            if ($errors) {
+            if ($loggableErrors) {
                 $this->log(
                     "Errors in v8 javascript execution",
-                    ["errors" => $errors]
+                    ["errors" => $loggableErrors]
                 );
             }
 
             if (!is_string($markup)) {
                 throw new RuntimeException("Value returned from v8 executeString isn't a string");
             }
-        } catch (V8JsException $e) {
+        } catch (\Exception $e) {
             $this->log($e->getMessage());
 
             if ($reactFunction === 'renderComponentToStaticMarkup') {
@@ -172,5 +153,38 @@ class V8JsRenderer implements RendererInterface
         if ($this->logger instanceof LoggerInterface) {
             $this->logger->error($message, $context);
         }
+    }
+
+    /**
+     * @param $reactFunction
+     * @param $componentPath
+     * @param $props
+     * @return array
+     */
+    protected function getJavaScript($reactFunction, $componentPath, $props)
+    {
+        $javascript = [];
+
+        $javascript[] = "var console = { warn: print, error: print };";
+
+        // Clear any module loaders
+        if (method_exists($this->v8, 'setModuleLoader') && $this->fragmentProvider instanceof SynchronousRequireProvider) {
+            $javascript[] = "function require() {}";
+            $javascript[] = "var require = null;";
+        }
+
+        foreach ($this->sourceFiles as $sourceFile) {
+            $javascript[] = file_get_contents($sourceFile) . ";";
+        }
+
+        $javascript[] = sprintf(
+            "%s.%s(%s(%s));",
+            $this->fragmentProvider->getReact(),
+            $reactFunction,
+            $this->fragmentProvider->getComponent($componentPath),
+            json_encode($props)
+        );
+
+        return implode("\n", $javascript);
     }
 }
