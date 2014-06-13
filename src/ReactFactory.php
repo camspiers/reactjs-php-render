@@ -69,7 +69,7 @@ class ReactFactory
     }
 
     /**
-     * @param ProviderInterface $fragmentProvider
+     * @param \ReactJS\RuntimeFragmentProvider\ProviderInterface $fragmentProvider
      * @return \ReactJS\React
      */
     public static function createUsingNull(ProviderInterface $fragmentProvider = null)

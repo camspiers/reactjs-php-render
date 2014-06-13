@@ -44,7 +44,7 @@ The result:
 	require('react').renderComponent(
 		require(".\/TestComponent")(null),
 		document.getElementById("53998c3f85044")
-		)
+	)
 </script>
 ```
 

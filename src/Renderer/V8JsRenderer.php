@@ -4,6 +4,7 @@ namespace ReactJS\Renderer;
 
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use ReactJS\RuntimeFragmentProvider\SynchronousRequireProvider;
 use Traversable;
 use V8Js;
 use V8JsException;
@@ -43,12 +44,12 @@ class V8JsRenderer implements RendererInterface
      */
     public function __construct(
         $sourceFiles,
-        ProviderInterface $fragmentProvider,
+        ProviderInterface $fragmentProvider = null,
         V8Js $v8 = null,
         LoggerInterface $logger = null
     )
     {
-        $this->fragmentProvider = $fragmentProvider;
+        $this->fragmentProvider = $fragmentProvider ?: new SynchronousRequireProvider();
         $this->setSourceFiles($sourceFiles);
         $this->v8 = $v8 ?: new V8Js;
         $this->logger = $logger;
@@ -108,13 +109,19 @@ class V8JsRenderer implements RendererInterface
      * @param null $props
      * @return string
      * @throws \RuntimeException
+     * @throws \V8JsException
      */
     private function render($reactFunction, $componentPath, $props = null)
     {
         $react = [];
 
         $react[] = "var console = { warn: print, error: print };";
-        $react[] = "var global = {};";
+
+        // Clear any module loaders
+        if (method_exists($this->v8, 'setModuleLoader') && $this->fragmentProvider instanceof SynchronousRequireProvider) {
+            $react[] = "function require() {}";
+            $react[] = "var require = null;";
+        }
 
         foreach ($this->sourceFiles as $sourceFile) {
             $react[] = file_get_contents($sourceFile) . ";";
