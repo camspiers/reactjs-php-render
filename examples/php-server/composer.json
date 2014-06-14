@@ -1,0 +1,7 @@
+{
+    "require": {
+        "react/http": "~0.4",
+        "camspiers/reactjs-php-render": "dev-master",
+        "docopt/docopt": "~0.6"
+    }
+}

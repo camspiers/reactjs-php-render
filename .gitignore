@@ -1,4 +1,4 @@
-/vendor/
+vendor
 /.idea/
 node_modules
 /tests/fixtures/bundle.js
