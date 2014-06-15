@@ -1,9 +1,8 @@
 <?php
 
-$vendorDir = __DIR__.'/vendor';
-
-require $vendorDir . '/autoload.php';
-require $vendorDir . '/docopt/docopt/src/docopt.php';
+require __DIR__.'/../../vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/vendor/docopt/docopt/src/docopt.php';
 
 $doc = <<<DOC
 ReactJS HTTP Server

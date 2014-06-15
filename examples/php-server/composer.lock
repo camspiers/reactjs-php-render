@@ -4,50 +4,8 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a0eac5355418f343c9d8fc341d60f5da",
+    "hash": "4c7a7eac28748974dced21d89316a37b",
     "packages": [
-        {
-            "name": "camspiers/reactjs-php-render",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/camspiers/reactjs-php-render.git",
-                "reference": "333eda622ff46feb1215d4d3660c04ba8c091d0a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/camspiers/reactjs-php-render/zipball/333eda622ff46feb1215d4d3660c04ba8c091d0a",
-                "reference": "333eda622ff46feb1215d4d3660c04ba8c091d0a",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "~4.0",
-                "php": ">=5.4.0",
-                "psr/log": "~1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ReactJS\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Cam Spiers",
-                    "email": "camspiers@gmail.com"
-                },
-                {
-                    "name": "Pieter Vanderwerff",
-                    "email": "me@pieter.io"
-                }
-            ],
-            "description": "React rendering from PHP",
-            "time": "2014-06-13 03:47:05"
-        },
         {
             "name": "docopt/docopt",
             "version": "0.6.0",
@@ -180,162 +138,6 @@
                 "url"
             ],
             "time": "2014-02-05 18:29:46"
-        },
-        {
-            "name": "guzzlehttp/guzzle",
-            "version": "4.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "577a69ff7d0a24e9576a2885c3a7afbaadd51ec1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/577a69ff7d0a24e9576a2885c3a7afbaadd51ec1",
-                "reference": "577a69ff7d0a24e9576a2885c3a7afbaadd51ec1",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/streams": "~1.0",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "ext-curl": "*",
-                "phpunit/phpunit": "~4.0",
-                "psr/log": "~1.0"
-            },
-            "suggest": {
-                "ext-curl": "Guzzle will use specific adapters if cURL is present"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\": "src/"
-                },
-                "files": [
-                    "src/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "client",
-                "curl",
-                "framework",
-                "http",
-                "http client",
-                "rest",
-                "web service"
-            ],
-            "time": "2014-06-08 20:00:20"
-        },
-        {
-            "name": "guzzlehttp/streams",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/streams.git",
-                "reference": "cf0c8c33ca95cc147efba4c714f630ee44767180"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/streams/zipball/cf0c8c33ca95cc147efba4c714f630ee44767180",
-                "reference": "cf0c8c33ca95cc147efba4c714f630ee44767180",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Stream\\": "src/"
-                },
-                "files": [
-                    "src/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "Provides a simple abstraction over streams of data (Guzzle 4+)",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "Guzzle",
-                "stream"
-            ],
-            "time": "2014-04-03 04:48:24"
-        },
-        {
-            "name": "psr/log",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Psr\\Log\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for logging libraries",
-            "keywords": [
-                "log",
-                "psr",
-                "psr-3"
-            ],
-            "time": "2012-12-21 11:40:51"
         },
         {
             "name": "react/event-loop",
@@ -509,9 +311,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "camspiers/reactjs-php-render": 20
-    },
+    "stability-flags": [],
     "platform": [],
     "platform-dev": []
 }
