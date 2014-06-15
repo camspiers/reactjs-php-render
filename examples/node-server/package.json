@@ -1,0 +1,15 @@
+{
+	"name": "react-node-server",
+	"version": "0.0.0",
+	"description": "",
+	"author": "Cam Spiers",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js"
+	},
+	"dependencies": {
+		"react": "0.10.0",
+		"express": "3.5.1",
+		"node-jsx": "0.10.0"
+	}
+}
