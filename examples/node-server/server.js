@@ -37,9 +37,9 @@ app.post('/', function(req, res){
 	var reactFunction;
 
 	if (req.body['renderType'] === 'static') {
-		reactFunction = 'renderStaticComponent';
+		reactFunction = 'renderComponentToStaticMarkup';
 	} else {
-		reactFunction = 'renderMountableComponent';
+		reactFunction = 'renderComponentToString';
 	}
 
 	var component = require(path.resolve(req.body['componentPath']));
