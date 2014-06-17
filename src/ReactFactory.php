@@ -6,6 +6,7 @@ use ReactJS\Renderer\NullRenderer;
 use ReactJS\RuntimeFragmentProvider\ProviderInterface;
 use ReactJS\Renderer\V8JsRenderer;
 use ReactJS\Renderer\HTTPServerRenderer;
+use ReactJS\Renderer\NodeProcessRenderer;
 use ReactJS\RuntimeFragmentProvider\SynchronousRequireProvider;
 use V8Js;
 use Psr\Log\LoggerInterface;
@@ -49,7 +50,7 @@ class ReactFactory
      * @param bool $ssl
      * @param \ReactJS\RuntimeFragmentProvider\ProviderInterface $fragmentProvider
      * @param \Psr\Log\LoggerInterface $logger
-     * @return React
+     * @return \ReactJS\React
      */
     public static function createUsingHTTPServer(
         $host,
@@ -78,6 +79,33 @@ class ReactFactory
 
         return new React(
             new NullRenderer(),
+            $fragmentProvider
+        );
+    }
+
+    /**
+     * @param $bin
+     * @param $sourceFiles
+     * @param \ReactJS\RuntimeFragmentProvider\ProviderInterface $fragmentProvider
+     * @param \Psr\Log\LoggerInterface $logger
+     * @return \ReactJS\React
+     */
+    public static function createUsingNode(
+        $bin,
+        $sourceFiles,
+        ProviderInterface $fragmentProvider = null,
+        LoggerInterface $logger = null
+    )
+    {
+        $fragmentProvider = $fragmentProvider ?: new SynchronousRequireProvider();
+
+        return new React(
+            new NodeProcessRenderer(
+                $bin,
+                $sourceFiles,
+                $fragmentProvider,
+                $logger
+            ),
             $fragmentProvider
         );
     }

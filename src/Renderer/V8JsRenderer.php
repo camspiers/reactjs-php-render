@@ -2,10 +2,8 @@
 
 namespace ReactJS\Renderer;
 
-use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use ReactJS\RuntimeFragmentProvider\SynchronousRequireProvider;
-use Traversable;
 use V8Js;
 use V8JsScriptException;
 use V8JsTimeLimitException;
@@ -18,6 +16,10 @@ use ReactJS\RuntimeFragmentProvider\ProviderInterface;
  */
 class V8JsRenderer implements RendererInterface
 {
+    use SourceFilesRendererTrait;
+    use LoggingRendererTrait;
+    use FragmentProvidingRendererTrait;
+
     /**
      * @var \V8Js
      */
@@ -27,16 +29,6 @@ class V8JsRenderer implements RendererInterface
      * @var \ReactJS\RuntimeFragmentProvider\ProviderInterface
      */
     protected $fragmentProvider;
-
-    /**
-     * @var array|\Traversable
-     */
-    protected $sourceFiles;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected $logger;
 
     /**
      * @param array|\Traversable $sourceFiles
@@ -51,36 +43,14 @@ class V8JsRenderer implements RendererInterface
         LoggerInterface $logger = null
     )
     {
-        $this->fragmentProvider = $fragmentProvider ?: new SynchronousRequireProvider();
         $this->setSourceFiles($sourceFiles);
+        if ($fragmentProvider) {
+            $this->setFragmentProvider($fragmentProvider);
+        }
+        if ($logger) {
+            $this->setLogger($logger);
+        }
         $this->v8 = $v8 ?: new V8Js;
-        $this->logger = $logger;
-    }
-
-    /**
-     * @param array|\Traversable $sourceFiles
-     * @throws \InvalidArgumentException
-     */
-    public function setSourceFiles($sourceFiles)
-    {
-        if (!(is_array($sourceFiles) || $sourceFiles instanceof Traversable)) {
-            throw new InvalidArgumentException(
-                "\$sourceFiles passed to setSourceFiles must be iterable"
-            );
-        }
-
-        foreach ($sourceFiles as $sourceFile) {
-            if (!is_readable($sourceFile)) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        "File '%s' doesn't exist or is not readable",
-                        $sourceFile
-                    )
-                );
-            }
-        }
-
-        $this->sourceFiles = $sourceFiles;
     }
 
     /**
@@ -145,17 +115,6 @@ class V8JsRenderer implements RendererInterface
     }
 
     /**
-     * @param $message
-     * @param array $context
-     */
-    protected function log($message, array $context = array())
-    {
-        if ($this->logger instanceof LoggerInterface) {
-            $this->logger->error($message, $context);
-        }
-    }
-
-    /**
      * @param $reactFunction
      * @param $componentPath
      * @param $props
@@ -163,12 +122,14 @@ class V8JsRenderer implements RendererInterface
      */
     protected function getJavaScript($reactFunction, $componentPath, $props)
     {
+        $fragmentProvider = $this->getFragmentProvider();
+
         $javascript = [];
 
         $javascript[] = "var console = { warn: print, error: print };";
 
         // Clear any module loaders
-        if (method_exists($this->v8, 'setModuleLoader') && $this->fragmentProvider instanceof SynchronousRequireProvider) {
+        if (method_exists($this->v8, 'setModuleLoader') && $fragmentProvider instanceof SynchronousRequireProvider) {
             $javascript[] = "function require() {}";
             $javascript[] = "var require = null;";
         }
@@ -179,9 +140,9 @@ class V8JsRenderer implements RendererInterface
 
         $javascript[] = sprintf(
             "%s.%s(%s(%s));",
-            $this->fragmentProvider->getReact(),
+            $fragmentProvider->getReact(),
             $reactFunction,
-            $this->fragmentProvider->getComponent($componentPath),
+            $fragmentProvider->getComponent($componentPath),
             json_encode($props)
         );
 
