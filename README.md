@@ -19,6 +19,22 @@ Renderers can be used directly to generate either "mountable" React HTML (includ
 
 The React class (`ReactJS\React`) can be used to generate mountable React HTML along with JavaScript that will automatically mount the browser React component into the generated server rendered markup.
 
+### Node
+
+When using a node process, users are required to provide source file(s) in an appropriate format for node to execute, these source file(s) need include:
+
+* React
+* The component you are attempting to render
+
+```php
+$node = ReactJS\ReactFactory::createUsingNode(
+	'/usr/bin/nodejs',
+	['bundle.js'] // bundle.js is a browserified bundle with React and TestComponent
+);
+
+echo $node->renderAutoMountingComponent('./TestComponent');
+```
+
 ### V8
 
 When using the V8Js php extension, users are required to provide source file(s) in the appropriate format for V8 to execute, these source file(s) need include:
