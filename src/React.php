@@ -38,11 +38,12 @@ class React implements RendererInterface
     /**
      * @param $componentPath
      * @param null $props
+     * @param null $id
      * @return string
      */
-    public function renderAutoMountingComponent($componentPath, $props = null)
+    public function renderAutoMountingComponent($componentPath, $props = null, $id = null)
     {
-        $containerId = uniqid();
+        $containerId = $id ?: uniqid();
 
         return sprintf(
             "<div id=\"%s\">%s</div><script>%s.renderComponent(%s(%s),document.getElementById(%s))</script>",
