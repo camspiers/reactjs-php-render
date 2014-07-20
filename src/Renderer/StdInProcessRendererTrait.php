@@ -9,6 +9,8 @@ use Symfony\Component\Process\Process;
  */
 trait StdInProcessRendererTrait
 {
+    use LoggingRendererTrait;
+
     /**
      * @var
      */
@@ -56,6 +58,12 @@ trait StdInProcessRendererTrait
         $process = $this->getProcess();
         $process->setInput($input);
         $process->run();
+        
+        if ($error = $process->getErrorOutput()) {
+            $this->log('Error during rendering', [
+                'stderr' => $error
+            ]);
+        }
         return $process;
     }
 }

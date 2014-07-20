@@ -8,7 +8,6 @@ use ReactJS\RuntimeFragmentProvider\ProviderInterface;
 class NodeProcessRenderer implements RendererInterface
 {
     use SourceFilesRendererTrait;
-    use LoggingRendererTrait;
     use StdInProcessRendererTrait;
     use FragmentProvidingRendererTrait;
 
